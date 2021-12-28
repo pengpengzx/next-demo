@@ -15,7 +15,7 @@ export default function Home() {
         <h1 className="title">
           Read{' '}
           <Link href="/posts/first-post">
-            <a>实打实大师的e!</a>
+            <a>实打实大师的加了一点东西哦e!</a>
           </Link>
         </h1>
         <p className="description">
