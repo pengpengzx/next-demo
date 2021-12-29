@@ -33,3 +33,5 @@ jobs:
         npm run build
         npx playwright install
         npm run test
+      continue-on-error: true
+      

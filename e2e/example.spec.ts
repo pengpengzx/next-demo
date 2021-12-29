@@ -8,5 +8,5 @@ test.only('example test', async ({ page }) => {
     console.log(`Uncaught exception: "${exception}"`);
   });
   await page.goto('http://localhost:3000/');
-  expect(await page.screenshot()).not.toMatchSnapshot('homePage.png');
+  expect(await page.screenshot()).toMatchSnapshot('homePage.png');
 });
