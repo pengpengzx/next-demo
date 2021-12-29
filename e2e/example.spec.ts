@@ -2,7 +2,7 @@
 import { test, expect } from '@playwright/test';
 
 
-test('example test', async ({ page }) => {
+test.only('example test', async ({ page }) => {
   // Log all uncaught errors to the terminal
   page.on('pageerror', exception => {
     console.log(`Uncaught exception: "${exception}"`);
