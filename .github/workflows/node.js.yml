@@ -26,10 +26,8 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm ci
-    - run: npm run dev
-    - run: npm test
-    - run: npm run test:e2e
-      env:
-        # This might depend on your test-runner/language binding
-        PLAYWRIGHT_TEST_BASE_URL: ${{ github.event.deployment_status.target_url }}
+    - run: ｜
+        npm ci
+        npm run dev
+        npm test
+        npm run test:e2e
