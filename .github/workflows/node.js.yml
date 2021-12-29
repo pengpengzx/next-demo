@@ -30,6 +30,5 @@ jobs:
       shell: bash
       run: |
         npm ci
-        npm run dev
-        npm test
+        npm build
         npm run test:e2e
