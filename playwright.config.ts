@@ -1,5 +1,5 @@
-// playwright.config.ts
-import { PlaywrightTestConfig } from '@playwright/test';
+import { PlaywrightTestConfig } from "@playwright/test";
+
 const config: PlaywrightTestConfig = {
   webServer: {
     command: 'npm run start',
@@ -7,5 +7,7 @@ const config: PlaywrightTestConfig = {
     timeout: 120 * 1000,
     reuseExistingServer: !process.env.CI,
   },
+  forbidOnly: !!process.env.CI,
 };
+
 export default config;
