@@ -5,7 +5,7 @@ import { Octokit } from "@octokit/core";
 try {
   // `who-to-greet` input defined in action metadata file
   const octokit = new Octokit({
-    auth: core.getInput('token')
+    auth: core.getInput('repo-token')
   });
   const nameToGreet = core.getInput('who-to-greet');
   console.log(`Hello ${nameToGreet}!`);
