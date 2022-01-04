@@ -68,11 +68,11 @@ jobs:
             console.log(imgArr)
             let str = '';
             if (Array.isArray(imgArr) && imgArr.length) {
-              str += `
-                <strong>平台</strong>  
-                | Actual | Diff | Expected |  <br>
-                |:------:|:----:|:--------:|  <br>
-              `;
+              str +=
+            `<strong>${platform}</strong>
+
+            | Actual | Diff | Expected |
+            |:------:|:----:|:--------:|`;
               imgArr.forEach(({ actual, diff, expected }) => {
                 str += `
                   | ${actual.name} | ${diff.name} | ${expected.name} |  \n
