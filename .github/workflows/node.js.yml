@@ -68,30 +68,30 @@ jobs:
           repo-token: ${{ secrets.TOKEN }}
           message: ${{format(env.MESSAGE, env.IMG_URL)}}  # add the url into the string
       - name: prepare comment body
-          id: comment-body
-          uses: actions/github-script@v5
-          with:
-            script: |
-              const images = fromJSON(steps.imgur_step.outputs.imgur_urls)
-              const imgArr = JSON.parse(images);
+        id: comment-body
+        uses: actions/github-script@v5
+        with:
+          script: |
+            const images = fromJSON(steps.imgur_step.outputs.imgur_urls)
+            const imgArr = JSON.parse(images);
 
-              if (Array.isArray(imgArr) && imgArr.length) {
-              if (!hasFailed) hasFailed = true;
+            if (Array.isArray(imgArr) && imgArr.length) {
+            if (!hasFailed) hasFailed = true;
+            str += `
+              <strong>${platform}</strong>
+              | Actual | Diff | Expected |
+              |:------:|:----:|:--------:|
+            `;
+            imgArr.forEach(({ actual, diff, expected }) => {
               str += `
-                <strong>${platform}</strong>
-                | Actual | Diff | Expected |
-                |:------:|:----:|:--------:|
+                | ${actual.name} | ${diff.name} | ${expected.name} |
+                | ![${actual.name}](${actual.link}) | ![${diff.name}](${diff.link}) | ![${expected.name}](${expected.link}) |
               `;
-              imgArr.forEach(({ actual, diff, expected }) => {
-                str += `
-                  | ${actual.name} | ${diff.name} | ${expected.name} |
-                  | ![${actual.name}](${actual.link}) | ![${diff.name}](${diff.link}) | ![${expected.name}](${expected.link}) |
-                `;
+            });
+            str += '\n\n';
+            await github.rest.issues.createComment({
+                owner: "pengpengzx",
+                repo: "next-demo",
+                issue_number: 1,
+                body: str
               });
-              str += '\n\n';
-              await github.rest.issues.createComment({
-                  owner: "pengpengzx",
-                  repo: "next-demo",
-                  issue_number: 1,
-                  body: str
-                });
