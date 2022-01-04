@@ -52,7 +52,6 @@ jobs:
         run: |
           unzip my-artifact.zip
           
-          rm my-artifact.zip
       - name: parse images
         uses: actions/github-script@v5
         with:
