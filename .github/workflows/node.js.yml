@@ -42,16 +42,17 @@ jobs:
           path: |
             test-results
             !dist/**/*.md
-      - uses: actions/download-artifact@v2
+      - name: Download artifact
+        uses: actions/download-artifact@v2
         with:
           name: my-artifact
-          path: ${{github.workspace}}
       - name: Display structure of downloaded files
-        run: ls
+        run: |
+          cd e2e-example-example-test
+          ls
       - name: Unzip files
         run: |
-          unzip my-artifact.zip
-          
+          unzip my-artifact.zip  
       - name: parse images
         uses: actions/github-script@v5
         with:
