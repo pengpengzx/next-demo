@@ -72,7 +72,8 @@ jobs:
             `<strong>visual testing</strong>
 
             | Actual | Diff | Expected |
-            |:------:|:----:|:--------:|`;
+            |:------:|:----:|:--------:|
+            `;
               imgArr.forEach(({ actual, diff, expected }) => {
                 str += 
             `| ${actual.name} | ${diff.name} | ${expected.name} |
