@@ -46,7 +46,7 @@ jobs:
         with:
           name: my-artifact
       - name: Display structure of downloaded files
-        run: ls -R
+        run: ls
       - name: unzip files
         run: |
           unzip my-artifact.zip
