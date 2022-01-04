@@ -64,9 +64,8 @@ jobs:
         uses: actions/github-script@v5
         with:
           script: |
-            const images = ${{steps.imgur.outputs.images}}
-            const imgArr = JSON.parse(images);
-            console.log(images)
+            const imgArr = steps.imgur.outputs.images;
+            console.log(imgArr)
             if (Array.isArray(imgArr) && imgArr.length) {
               str += `
                 <strong>平台</strong>
