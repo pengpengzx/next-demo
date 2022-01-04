@@ -1,14 +1,9 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
-import {
-  Octokit
-} from "@octokit/core";
 
+const octokit = github.getOctokit(core.getInput('repo-token'));
 try {
   // `who-to-greet` input defined in action metadata file
-  const octokit = new Octokit({
-    auth: core.getInput('repo-token')
-  });
   const nameToGreet = core.getInput('who-to-greet');
   console.log(`Hello ${nameToGreet}!`);
   const time = (new Date()).toTimeString();
@@ -18,9 +13,7 @@ try {
     owner,
     repo
   } = github.context.repo;
-  const {
-    issue_number
-  } = github.context.issue;
+
   console.log(owner, repo, octokit);
   // const res = await octokit.request('POST /repos/:owner/:repo/issues/:issue_number/comments', {
   //   owner,

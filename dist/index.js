@@ -9438,37 +9438,20 @@ module.exports = JSON.parse('[["0","\\u0000",128],["a1","｡",62],["8140","　�
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__nccwpck_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/compat */
 /******/ 	
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-"use strict";
-__nccwpck_require__.r(__webpack_exports__);
-/* harmony import */ var _octokit_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(5932);
 const core = __nccwpck_require__(6964);
 const github = __nccwpck_require__(8033);
 
-
+const octokit = github.getOctokit(core.getInput('repo-token'));
 try {
   // `who-to-greet` input defined in action metadata file
-  const octokit = new _octokit_core__WEBPACK_IMPORTED_MODULE_0__.Octokit({
-    auth: core.getInput('repo-token')
-  });
   const nameToGreet = core.getInput('who-to-greet');
   console.log(`Hello ${nameToGreet}!`);
   const time = (new Date()).toTimeString();
@@ -9478,9 +9461,7 @@ try {
     owner,
     repo
   } = github.context.repo;
-  const {
-    issue_number
-  } = github.context.issue;
+
   console.log(owner, repo, octokit);
   // const res = await octokit.request('POST /repos/:owner/:repo/issues/:issue_number/comments', {
   //   owner,
