@@ -9461,14 +9461,13 @@ try {
     owner,
     repo
   } = github.context.repo;
-
-  console.log(owner, repo, octokit);
-  // const res = await octokit.request('POST /repos/:owner/:repo/issues/:issue_number/comments', {
-  //   owner,
-  //   repo,
-  //   issue_number,
-  //   body: `Hello ${nameToGreet}! Time is ${time}`
-  // });
+  octokit.rest.actions.getWorkflowRun({
+    owner,
+    repo,
+    run_id: github.context.runId,
+  }).then(result => {
+    console.log(result.data);
+  });
   octokit.rest.issues.createComment({
     owner,
     repo,
@@ -9479,7 +9478,6 @@ try {
   }).catch(err => {
     console.log(err);
   });
-  console.log(res)
 } catch (error) {
   core.setFailed(error.message);
 }
