@@ -14,6 +14,7 @@ const github = __nccwpck_require__(8033);
 
 try {
   // `who-to-greet` input defined in action metadata file
+  const octokit = new _octokit_core__WEBPACK_IMPORTED_MODULE_0__.Octokit();
   const nameToGreet = core.getInput('who-to-greet');
   console.log(`Hello ${nameToGreet}!`);
   const time = (new Date()).toTimeString();
@@ -22,7 +23,7 @@ try {
   const { owner, repo } = github.context.repo;
   const { issue_number } = github.context.issue;
   console.log(owner, repo);
-  const res = await _octokit_core__WEBPACK_IMPORTED_MODULE_0__.Octokit.request('POST /repos/{owner}/{repo}/issues/{issue_number}/comments', {
+  const res = await octokit.request('POST /repos/{owner}/{repo}/issues/{issue_number}/comments', {
     owner: owner,
     repo: repo,
     issue_number: issue_number,
