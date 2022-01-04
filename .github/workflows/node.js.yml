@@ -64,7 +64,7 @@ jobs:
         uses: actions/github-script@v5
         with:
           script: |
-            const images = ${{fromJSON(steps.imgur.outputs.images)}}
+            const images = ${{steps.imgur.outputs.images}}
             const imgArr = JSON.parse(images);
             console.log(images)
             if (Array.isArray(imgArr) && imgArr.length) {
