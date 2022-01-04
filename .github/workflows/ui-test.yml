@@ -1,91 +1,77 @@
-name: 'Tests | Screenshot Testing'
-on:
-  pull_request:
-    branches:
-      - action
-      - main
-  push:
-    branches:
-      - action
-      - main
+# name: 'Tests | Screenshot Testing'
+# on:
+#   pull_request:
+#     branches:
+#       - action
+#       - main
+#   push:
+#     branches:
+#       - action
+#       - main
 
-jobs:
-  cancel-previous:
-    name: 'cancel previous workflow'
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Cancel Previous Runs
-        run: curl -i -L -X GET 'https://github-actions-next.demo/api/cancel-previous-run?runId=${{ github.run_id }}&owner=LedgerHQ&repo=pengpengzx&branch=${{ github.event.pull_request.head.ref }}&headSha=${{ github.event.pull_request.head.sha }}'
+# jobs:
+#   cancel-previous:
+#     name: 'cancel previous workflow'
+#     runs-on: ubuntu-20.04
+#     steps:
+#       - name: Cancel Previous Runs
+#         run: curl -i -L -X GET 'https://github-actions-next.demo/api/cancel-previous-run?runId=${{ github.run_id }}&owner=LedgerHQ&repo=pengpengzx&branch=${{ github.event.pull_request.head.ref }}&headSha=${{ github.event.pull_request.head.sha }}'
 
-  ui-tests-linux:
-    name: '[Linux] UI'
-    needs: [start-runner]
-    runs-on: ${{ needs.start-runner.outputs.label }}
-    permissions:
-      issues: write
-      pull-requests: write
-    steps:
-      - name: prepare runner
-        run: |
-          sudo growpart /dev/nvme0n1 1
-          sudo resize2fs /dev/nvme0n1p1
-      - uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          repository: ${{github.event.pull_request.head.repo.full_name}}
-          persist-credentials: false
-      - uses: actions/setup-node@v2
-        if: always()
-        with:
-          node-version: 14.x
-      - name: install yarn
-        if: always()
-        run: npm install --global yarn
-      - name: set git user
-        run: |
-          git config user.email "team-live@ledger.fr"
-          git config user.name "Team Live"
-      - name: install dependencies
-        env:
-          JOBS: max
-        run: yarn --frozen-lockfile --network-timeout 100000
-      - name: install operating system dependencies for playwright
-        run: npx playwright install-deps
-      - name: run ui tests (Linux)
-        if: always()
-        run: xvfb-run --auto-servernum -- yarn playwright
-      - name: upload diffs to imgur
-        if: always()
-        uses: ledgerhq/actions/packages/upload-images@main
-        id: imgur
-        with:
-          path: playwright/artifacts/test-results
-          workspace: ${{ github.workspace }}
-          os: linux
-      - name: upload images
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: images-linux.json
-          path: images-linux.json
-      # - name: save PR number
-      #   if: always() && github.event.pull_request != ''
-      #   run: |
-      #     mkdir -p ./pr
-      #     echo ${{ github.event.number }} > ./pr/NR
-      - name: upload tests data
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: tests-reports
-          path: |
-            lint.txt
-            jest.txt
-      # pr/NR
-      - name: upload ci suggested screenshots
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: playwright-results
-          path: |
-            e2e/artifacts/test-results
+#   ui-tests-linux:
+#     name: '[Linux] UI'
+#     needs: [start-runner]
+#     runs-on: ${{ needs.start-runner.outputs.label }}
+#     permissions:
+#       issues: write
+#       pull-requests: write
+#     steps:
+#       - name: prepare runner
+#         run: |
+#           sudo growpart /dev/nvme0n1 1
+#           sudo resize2fs /dev/nvme0n1p1
+#       - uses: actions/checkout@v2
+#         with:
+#           ref: ${{ github.event.pull_request.head.sha }}
+#           repository: ${{github.event.pull_request.head.repo.full_name}}
+#           persist-credentials: false
+#       - uses: actions/setup-node@v2
+#         if: always()
+#         with:
+#           node-version: 14.x
+#       - name: install yarn
+#         if: always()
+#         run: npm install --global yarn
+#       - name: set git user
+#         run: |
+#           git config user.email "team-live@ledger.fr"
+#           git config user.name "Team Live"
+#       - name: install dependencies
+#         env:
+#           JOBS: max
+#         run: yarn --frozen-lockfile --network-timeout 100000
+#       - name: install operating system dependencies for playwright
+#         run: npx playwright install-deps
+#       - name: run ui tests (Linux)
+#         if: always()
+#         run: xvfb-run --auto-servernum -- yarn playwright
+#       - name: upload diffs to imgur
+#         if: always()
+#         uses: ledgerhq/actions/packages/upload-images@main
+#         id: imgur
+#         with:
+#           path: playwright/artifacts/test-results
+#           workspace: ${{ github.workspace }}
+#           os: linux
+#       # - name: save PR number
+#       #   if: always() && github.event.pull_request != ''
+#       #   run: |
+#       #     mkdir -p ./pr
+#       #     echo ${{ github.event.number }} > ./pr/NR
+#       # pr/NR
+#       - name: upload ci suggested screenshots
+#         if: always()
+#         uses: actions/upload-artifact@v2
+#         with:
+#           name: playwright-results
+#           path: |
+#             e2e/artifacts/test-results
