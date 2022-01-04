@@ -1,5 +1,6 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
+import { Octokit } from "@octokit/core";
 
 try {
   // `who-to-greet` input defined in action metadata file
@@ -9,17 +10,17 @@ try {
   core.setOutput("time", time);
   // Get the JSON webhook payload for the event that triggered the workflow
   const payload = JSON.stringify(github.context.payload, undefined, 2)
-  console.log(`The event payload: ${payload}`);
+
   const { owner, repo } = github.context.repo;
   const { issue_number } = github.context.issue;
   console.log(owner, repo);
-  await octokit.request('POST /repos/{owner}/{repo}/issues/{issue_number}/comments', {
+  const res = await Octokit.request('POST /repos/{owner}/{repo}/issues/{issue_number}/comments', {
     owner: owner,
     repo: repo,
     issue_number: issue_number,
     body: 'body'
   })
-  
+  console.log(res)
 } catch (error) {
   core.setFailed(error.message);
 }
