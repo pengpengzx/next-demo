@@ -9,8 +9,6 @@ try {
   const time = (new Date()).toTimeString();
   core.setOutput("time", time);
   // Get the JSON webhook payload for the event that triggered the workflow
-  const payload = JSON.stringify(github.context.payload, undefined, 2)
-
   const { owner, repo } = github.context.repo;
   const { issue_number } = github.context.issue;
   console.log(owner, repo);
