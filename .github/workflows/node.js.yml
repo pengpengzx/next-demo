@@ -1,13 +1,13 @@
 # This workflow will do a clean install of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Node.js CI
+name: Screenshot Testing
 
 on:
   push:
-    branches: [main]
+    branches: [main, action]
   pull_request:
-    branches: [main]
+    branches: [main, action]
 
 jobs:
   build:
@@ -42,29 +42,31 @@ jobs:
           path: |
             test-results
             !dist/**/*.md
-      - name: Download all workflow run artifacts
-        uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v2
         with:
           name: my-artifact
-      - name: save PR number
-        if: always()
+      - name: Display structure of downloaded files
+        run: ls -R
+      - name: unzip files
         run: |
-          mkdir -p ./pr
-          echo ${{ github.event.number }} > ./pr/NR
-      - name: Create comment
-        uses: peter-evans/create-or-update-comment@v1
+          unzip my-artifact.zip
+          
+          rm my-artifact.zip
+      - name: parse images
+        uses: actions/github-script@v5
         with:
-          issue-number: ${{ github.event.pull_request.number }}
-          body: |
-            This is a multi-line test comment
-            - With GitHub **Markdown** :sparkles:
-            - Created by [create-or-update-comment][1]
-
-            [1]: https://github.com/peter-evans/create-or-update-comment
-          reactions: '+1'
-      - name: Hello world action step
-        id: hello
-        uses: './'
-        with:
-          who-to-greet: 'mao mao'
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require("fs");
+            const files = ["images-linux", "images-windows-latest"];
+            let result = {};
+            for (const file of files) {
+              try {
+                const raw = JSON.parse(fs.readFileSync("${{github.workspace}}/" + file + ".json"));
+                const key = file.replace("images-", "").replace("-latest", "").trim()
+                result[key] = raw;
+              } catch (err) {
+                console.log(err);
+              }
+            }
+            fs.writeFileSync(`./images.json`, JSON.stringify(result, null, 2));
+      - name: prepare comment body

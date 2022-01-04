@@ -20,11 +20,21 @@ try {
   }).then(result => {
     console.log(result.data);
   });
+  octokit.rest.actions.getWorkflowRun({
+    owner,
+    repo,
+    run_id: github.context.runId,
+  }).then(result => {
+    console.log(result.data);
+  });
+  const url = require('/test-results/e2e-example-example-test/homePage-actual.png');
+  const url2 = '/test-results/e2e-example-example-test/homePage-expected.png';
+
   octokit.rest.issues.createComment({
     owner,
     repo,
     issue_number: 1,
-    body: 'test'
+    body: `${url} ${url2}`
   }).then(res => {
     console.log(res);
   }).catch(err => {
