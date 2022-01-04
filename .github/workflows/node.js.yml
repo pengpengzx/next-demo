@@ -56,17 +56,6 @@ jobs:
         with:
           client_id: ${{secrets.IMGUR_CLIENT_ID}} 
           path: e2e-example-example-test
-      - name: Comment on the PR about the result
-        uses: github-actions-up-and-running/pr-comment@v1.0.1  # you can use any action that you want. This is only an example
-        env:
-          # recall that this action returns a JSON.stringified array
-          IMG_URL: ${{ fromJSON(steps.imgur_step.outputs.imgur_urls)[0] }}  # get the output of the step above using its id
-          MESSAGE: |
-            Here is the picture that was uploaded:
-            ![Image]({0}) # markdown syntax for displaying a picture
-        with:
-          repo-token: ${{ secrets.TOKEN }}
-          message: ${{format(env.MESSAGE, env.IMG_URL)}}  # add the url into the string
       - name: prepare comment body
         id: comment-body
         uses: actions/github-script@v5
