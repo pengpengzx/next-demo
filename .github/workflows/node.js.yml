@@ -50,18 +50,22 @@ jobs:
         run: |
           cd e2e-example-example-test
           ls
-      - name: Upload to imgur
-        uses: devicons/public-upload-to-imgur@v2.2.1
-        id: imgur_step
+      - name: upload diffs to imgur
+        if: always()
+        uses: pengpengzx/actions/packages/upload-images@main
+        id: imgur
         with:
-          client_id: ${{secrets.IMGUR_CLIENT_ID}} 
           path: e2e-example-example-test
+          workspace: ${{ github.workspace }}
+          os: linux
+          token: ${{ secrets.TOKEN }}
       - name: prepare comment body
         id: comment-body
         uses: actions/github-script@v5
         with:
           script: |
-            const images = ${{fromJSON(steps.imgur_step.outputs.imgur_urls)}}
+            const images = ${{fromJSON(steps.imgur.outputs.images)}}
+            conog.log(images)
             const imgArr = JSON.parse(images);
 
             if (Array.isArray(imgArr) && imgArr.length) {
