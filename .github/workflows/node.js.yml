@@ -69,7 +69,7 @@ jobs:
             let str = '';
             if (Array.isArray(imgArr) && imgArr.length) {
               str +=
-            `<strong>${platform}</strong>
+            `<strong>visual testing</strong>
 
             | Actual | Diff | Expected |
             |:------:|:----:|:--------:|`;
