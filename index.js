@@ -4,7 +4,9 @@ import { Octokit } from "@octokit/core";
 
 try {
   // `who-to-greet` input defined in action metadata file
-  const octokit = new Octokit();
+  const octokit = new Octokit({
+    auth: core.getInput('token')
+  });
   const nameToGreet = core.getInput('who-to-greet');
   console.log(`Hello ${nameToGreet}!`);
   const time = (new Date()).toTimeString();
@@ -12,8 +14,14 @@ try {
   // Get the JSON webhook payload for the event that triggered the workflow
   const { owner, repo } = github.context.repo;
   const { issue_number } = github.context.issue;
-  console.log(owner, repo);
-  const res = await octokit.request(`POST /repos/${owner}/${repo}/issues/${issue_number}/comments`, {
+  console.log(owner, repo, issue_number);
+  // const res = await octokit.request('POST /repos/:owner/:repo/issues/:issue_number/comments', {
+  //   owner,
+  //   repo,
+  //   issue_number,
+  //   body: `Hello ${nameToGreet}! Time is ${time}`
+  // });
+  const res = await octokit.request(`POST /repos/{owner}/{repo}/issues/{issue_number}/comments`, {
     owner: owner,
     repo: repo,
     issue_number: issue_number,

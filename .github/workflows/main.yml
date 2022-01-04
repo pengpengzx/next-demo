@@ -12,6 +12,7 @@ jobs:
         uses: './'
         with:
           who-to-greet: 'mao mao'
+          token: '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'
       # Use the output from the `hello` step
       - name: Get the output time
         run: echo "The time was ${{ steps.hello.outputs.time }}"
