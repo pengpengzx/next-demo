@@ -65,9 +65,8 @@ jobs:
         with:
           script: |
             const images = ${{fromJSON(steps.imgur.outputs.images)}}
-            conog.log(images)
             const imgArr = JSON.parse(images);
-
+            console.log(images)
             if (Array.isArray(imgArr) && imgArr.length) {
               str += `
                 <strong>平台</strong>
