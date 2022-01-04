@@ -10,12 +10,16 @@ try {
   // Get the JSON webhook payload for the event that triggered the workflow
   const payload = JSON.stringify(github.context.payload, undefined, 2)
   console.log(`The event payload: ${payload}`);
-  // await octokit.request('POST /repos/{owner}/{repo}/issues/{issue_number}/comments', {
-  //   owner: 'pengpengzx',
-  //   repo: 'hello-world',
-  //   issue_number: 42,
-  //   body: 'body'
-  // })
+  const { owner, repo } = github.context.repo;
+  const { issue_number } = github.context.issue;
+  console.log(owner, repo);
+  await octokit.request('POST /repos/{owner}/{repo}/issues/{issue_number}/comments', {
+    owner: owner,
+    repo: repo,
+    issue_number: issue_number,
+    body: 'body'
+  })
+  
 } catch (error) {
   core.setFailed(error.message);
 }
