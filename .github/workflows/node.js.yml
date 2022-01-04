@@ -45,9 +45,10 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: my-artifact
+          path: ${{github.workspace}}
       - name: Display structure of downloaded files
         run: ls
-      - name: unzip files
+      - name: Unzip files
         run: |
           unzip my-artifact.zip
           
