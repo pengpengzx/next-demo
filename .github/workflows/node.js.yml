@@ -74,10 +74,10 @@ jobs:
             | Actual | Diff | Expected |
             |:------:|:----:|:--------:|`;
               imgArr.forEach(({ actual, diff, expected }) => {
-                str += `
-                  | ${actual.name} | ${diff.name} | ${expected.name} |  \n
-                  | ![${actual.name}](${actual.link}) | ![${diff.name}](${diff.link}) | ![${expected.name}](${expected.link}) | \n
-                `;
+                str += 
+            `| ${actual.name} | ${diff.name} | ${expected.name} |
+            | ![${actual.name}](${actual.link}) | ![${diff.name}](${diff.link}) | ![${expected.name}](${expected.link}) |`;
+                
               });
               str += '\n\n';
             str = `
