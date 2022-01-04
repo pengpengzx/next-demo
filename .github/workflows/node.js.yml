@@ -55,8 +55,7 @@ jobs:
         id: imgur_step
         with:
           client_id: ${{secrets.IMGUR_CLIENT_ID}} 
-          path: |
-              e2e-example-example-test
+          path: e2e-example-example-test
       - name: Comment on the PR about the result
         uses: github-actions-up-and-running/pr-comment@v1.0.1  # you can use any action that you want. This is only an example
         env:
@@ -68,8 +67,31 @@ jobs:
         with:
           repo-token: ${{ secrets.TOKEN }}
           message: ${{format(env.MESSAGE, env.IMG_URL)}}  # add the url into the string
-      # - name: prepare comment body
-      #   id: comment-body
-      #   uses: ledgerhq/actions/packages/prepare-comment@main
-      #   with:
-      #     images: images.json
+      - name: prepare comment body
+         id: comment-body
+         uses: actions/github-script@v5
+         with:
+           script: |
+            const images = fromJSON(steps.imgur_step.outputs.imgur_urls)
+            const imgArr = JSON.parse(images);
+
+            if (Array.isArray(imgArr) && imgArr.length) {
+            if (!hasFailed) hasFailed = true;
+            str += `
+              <strong>${platform}</strong>
+              | Actual | Diff | Expected |
+              |:------:|:----:|:--------:|
+            `;
+            imgArr.forEach(({ actual, diff, expected }) => {
+              str += `
+                | ${actual.name} | ${diff.name} | ${expected.name} |
+                | ![${actual.name}](${actual.link}) | ![${diff.name}](${diff.link}) | ![${expected.name}](${expected.link}) |
+              `;
+            });
+            str += '\n\n';
+            await github.rest.issues.createComment({
+                owner: "pengpengzx",
+                repo: "next-demo",
+                issue_number: 1,
+                body: str
+              });
