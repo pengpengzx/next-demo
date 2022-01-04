@@ -80,6 +80,13 @@ jobs:
                 `;
               });
               str += '\n\n';
+            str = `
+            <details>
+            <p>
+            ${str}
+            </p>
+            </details>
+            `;
               await github.rest.issues.createComment({
                   owner: "pengpengzx",
                   repo: "next-demo",
