@@ -50,8 +50,9 @@ jobs:
         run: |
           cd e2e-example-example-test
           ls
-      - uses: devicons/public-upload-to-imgur@v2.2.1
-          id: imgur_step
+      - name: Upload to imgur
+        uses: devicons/public-upload-to-imgur@v2.2.1
+        id: imgur_step
         with:
           client_id: ${{secrets.IMGUR_CLIENT_ID}} 
           path: |
