@@ -66,6 +66,7 @@ jobs:
           script: |
             const imgArr = ${{steps.imgur.outputs.images}};
             console.log(imgArr)
+            let str = '';
             if (Array.isArray(imgArr) && imgArr.length) {
               str += `
                 <strong>平台</strong>
