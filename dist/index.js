@@ -15,7 +15,7 @@ const github = __nccwpck_require__(8033);
 try {
   // `who-to-greet` input defined in action metadata file
   const octokit = new _octokit_core__WEBPACK_IMPORTED_MODULE_0__.Octokit({
-    auth: core.getInput('token')
+    auth: core.getInput('repo-token')
   });
   const nameToGreet = core.getInput('who-to-greet');
   console.log(`Hello ${nameToGreet}!`);
