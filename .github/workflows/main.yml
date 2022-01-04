@@ -11,6 +11,7 @@ jobs:
         id: hello
         uses: './'
         with:
+          |
           who-to-greet: 'mao mao'
           token: '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'
       # Use the output from the `hello` step
