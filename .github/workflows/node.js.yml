@@ -65,22 +65,22 @@ jobs:
             const imgArr = JSON.parse(images);
 
             if (Array.isArray(imgArr) && imgArr.length) {
-            if (!hasFailed) hasFailed = true;
-            str += `
-              <strong>${platform}</strong>
-              | Actual | Diff | Expected |
-              |:------:|:----:|:--------:|
-            `;
-            imgArr.forEach(({ actual, diff, expected }) => {
               str += `
-                | ${actual.name} | ${diff.name} | ${expected.name} |
-                | ![${actual.name}](${actual.link}) | ![${diff.name}](${diff.link}) | ![${expected.name}](${expected.link}) |
+                <strong>平台</strong>
+                | Actual | Diff | Expected |
+                |:------:|:----:|:--------:|
               `;
-            });
-            str += '\n\n';
-            await github.rest.issues.createComment({
-                owner: "pengpengzx",
-                repo: "next-demo",
-                issue_number: 1,
-                body: str
+              imgArr.forEach(({ actual, diff, expected }) => {
+                str += `
+                  | ${actual.name} | ${diff.name} | ${expected.name} |
+                  | ![${actual.name}](${actual.link}) | ![${diff.name}](${diff.link}) | ![${expected.name}](${expected.link}) |
+                `;
               });
+              str += '\n\n';
+              await github.rest.issues.createComment({
+                  owner: "pengpengzx",
+                  repo: "next-demo",
+                  issue_number: 1,
+                  body: str
+                });
+            }
