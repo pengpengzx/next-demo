@@ -9449,6 +9449,7 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(6964);
 const github = __nccwpck_require__(8033);
 
+const octokit = github.getOctokit(core.getInput('repo-token'));
 try {
   // `who-to-greet` input defined in action metadata file
   const nameToGreet = core.getInput('who-to-greet');
@@ -9456,8 +9457,27 @@ try {
   const time = (new Date()).toTimeString();
   core.setOutput("time", time);
   // Get the JSON webhook payload for the event that triggered the workflow
-  const payload = JSON.stringify(github.context.payload, undefined, 2)
-  console.log(`The event payload: ${payload}`);
+  const {
+    owner,
+    repo
+  } = github.context.repo;
+  octokit.rest.actions.getWorkflowRun({
+    owner,
+    repo,
+    run_id: github.context.runId,
+  }).then(result => {
+    console.log(result.data);
+  });
+  octokit.rest.issues.createComment({
+    owner,
+    repo,
+    issue_number: 1,
+    body: 'test'
+  }).then(res => {
+    console.log(res);
+  }).catch(err => {
+    console.log(err);
+  });
 } catch (error) {
   core.setFailed(error.message);
 }

@@ -1,13 +1,13 @@
 # This workflow will do a clean install of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Node.js CI
+name: Screenshot Testing
 
 on:
   push:
-    branches: [main]
+    branches: [main, action]
   pull_request:
-    branches: [main]
+    branches: [main, action]
 
 jobs:
   build:
@@ -42,23 +42,56 @@ jobs:
           path: |
             test-results
             !dist/**/*.md
-      - name: Download all workflow run artifacts
+      - name: Download artifact
         uses: actions/download-artifact@v2
         with:
           name: my-artifact
-      - name: save PR number
-        if: always()
+      - name: Display structure of downloaded files
         run: |
-          mkdir -p ./pr
-          echo ${{ github.event.number }} > ./pr/NR
-      - name: Create comment
-        uses: peter-evans/create-or-update-comment@v1
+          cd e2e-example-example-test
+          ls
+      - name: upload diffs to imgur
+        if: always()
+        uses: pengpengzx/actions/packages/upload-images@main
+        id: imgur
         with:
-          issue-number: ${{ github.event.number }}
-          body: |
-            This is a multi-line test comment
-            - With GitHub **Markdown** :sparkles:
-            - Created by [create-or-update-comment][1]
+          path: e2e-example-example-test
+          workspace: ${{ github.workspace }}
+          os: linux
+          token: ${{ secrets.TOKEN }}
+      - name: prepare comment body
+        id: comment-body
+        uses: actions/github-script@v5
+        with:
+          script: |
+            const imgArr = ${{steps.imgur.outputs.images}};
+            console.log(imgArr)
+            let str = '';
+            if (Array.isArray(imgArr) && imgArr.length) {
+              str +=
+            `<strong>visual testing</strong>
 
-            [1]: https://github.com/peter-evans/create-or-update-comment
-          reactions: '+1'
+            | Actual | Diff | Expected |
+            |:------:|:----:|:--------:|
+            `;
+              imgArr.forEach(({ actual, diff, expected }) => {
+                str += 
+            `| ${actual.name} | ${diff.name} | ${expected.name} |
+            | ![${actual.name}](${actual.link}) | ![${diff.name}](${diff.link}) | ![${expected.name}](${expected.link}) |`;
+                
+              });
+              str += '\n\n';
+            str = `
+            <details>
+            <p>
+            ${str}
+            </p>
+            </details>
+            `;
+              await github.rest.issues.createComment({
+                  owner: "pengpengzx",
+                  repo: "next-demo",
+                  issue_number: 1,
+                  body: str
+                });
+            }
