@@ -24,6 +24,4 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
       - name: Run test
         run: |
-          apt-get update
-          apt-get install fontconfig
           fc-list
