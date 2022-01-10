@@ -1,50 +1,29 @@
-name: 'PR Reporting'
-on:
-  workflow_dispatch:
-    inputs:
-      runId:
-        description: run id
-        required: true
+name: Screenshot Test
 
-  workflow_run:
-    workflows: ['UI tests']
-    types:
-      - 'completed'
+on:
+  push:
+    branches: [ui-test, feat/SC_SAAS-5598]
+  pull_request:
+    branches: [ui-test, feat/SC_SAAS-5598]
+  workflow_dispatch:
+
+env:
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: "./functions" # set this to the path to your web app project, defaults to the repository root
+  NODE_VERSION: "14.x" # set this to the node version to use (supports 8.x, 10.x, 12.x)
 
 jobs:
-  comment-on-pr:
-    # if: github.event.workflow_run.event == 'pull_request'
-    strategy:
-      fail-fast: false
-      matrix:
-        # os: [ubuntu-20.04, macos-latest, windows-latest]
-        os: [ubuntu-20.04]
-    runs-on: ubuntu-20.04
+  test-frontend:
+    runs-on: ubuntu-latest
     steps:
-      - name: download artifacts
-        uses: actions/github-script@v3.1.0
+      - name: "Checkout GitHub Action"
+        uses: actions/checkout@v2
+
+      - name: Setup Node ${{ env.NODE_VERSION }} Environment
+        uses: actions/setup-node@v2
         with:
-          script: |
-            const fs = require('fs');
-            const artifacts = await github.actions.listWorkflowRunArtifacts({
-               owner: context.repo.owner,
-               repo: context.repo.repo,
-               run_id: ${{github.event.workflow_run.id || github.event.inputs.runId }},
-            });
-
-            const playwrightArtifacts artifacts.data.artifacts.filter((artifact) => {
-              return artifact.name == "playwright-results-${{ matrix.os }}"
-            })[0];
-
-            const downloadPlaywright = await github.actions.downloadArtifact({
-               owner: context.repo.owner,
-               repo: context.repo.repo,
-               artifact_id: reportArtifacts.id,
-               archive_format: 'zip',
-            });
-            fs.writeFileSync('${{github.workspace}}/playwright-results-${{ matrix.os }}.zip', Buffer.from(downloadPlaywright.data));
-      - name: unzip stuff
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Run test
         run: |
-          unzip playwright-results-${{ matrix.os }}.zip
-      - name: ls on files
-        run: ls
+          apt-get update
+          apt-get install fontconfig
+          fc-list
