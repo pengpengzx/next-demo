@@ -52,5 +52,5 @@ jobs:
         with:
           app-name: 'nextauth'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_12B4B892FD5A4FB1A80A8422C8F09CFD }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2D36BFEF92E44150B8B0337082BE71E2 }}
           package: .
